@@ -1,4 +1,4 @@
-# App shortcut maker for Debian
+# App shortcut maker
 
 If you have AppImage packages or tools with a different extension, that you'd like to access more easily this might be the solution for you. This small script allows you to add those tools directly to your applications menu. This way, you can access your costum apps quickly and effortlessly.
 
