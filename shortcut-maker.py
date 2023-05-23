@@ -1,7 +1,9 @@
 import os
 import sys
+import shutil
 
 DESKTOP_DIR = "/usr/share/applications/"
+BACKUP_DIR = "/usr/share/applications/backup/"
 
 def list_desktop_files(keyword=None):
     print("Available .desktop files:")
@@ -21,6 +23,11 @@ def edit_desktop_file(file_name):
     if not os.path.exists(file_path):
         print(f"File {file_name} does not exist.")
         return
+    backup_path = os.path.join(BACKUP_DIR, file_name)
+    if not os.path.exists(BACKUP_DIR):
+        os.makedirs(BACKUP_DIR)
+    shutil.copy2(file_path, backup_path)
+    print(f"Backup created: {backup_path}")
     print(f"Editing file: {file_name}")
     print("Enter new values (leave blank to keep current value):")
     with open(file_path, "r") as f:
@@ -37,6 +44,19 @@ def edit_desktop_file(file_name):
         with open(file_path, "w") as f:
             f.writelines(edited_lines)
         print("File edited successfully.")
+    except PermissionError:
+        print("Permission denied. Please run the script with administrative privileges (e.g., using sudo).")
+
+def restore_backup(file_name):
+    backup_path = os.path.join(BACKUP_DIR, file_name)
+    file_path = os.path.join(DESKTOP_DIR, file_name)
+    if not os.path.exists(backup_path):
+        print("Backup file does not exist.")
+        return
+    try:
+        shutil.copy2(backup_path, file_path)
+        print("Backup restored successfully.")
+		os.remove(backup_path)
     except PermissionError:
         print("Permission denied. Please run the script with administrative privileges (e.g., using sudo).")
 
@@ -85,12 +105,13 @@ def main():
 
     while True:
         print("Options:")
-        print("1. List .desktop files")
-        print("2. Edit a .desktop file")
-        print("3. Create a new .desktop file")
-        print("4. Remove a .desktop file")
-        print("5. Exit")
-        choice = input("Enter your choice (1-5): ")
+        print("1. List all shortcuts")
+        print("2. Edit shortcut")
+        print("3. Create a new shortcut")
+        print("4. Remove shortcut")
+        print("5. Restore a backup")
+        print("6. Exit")
+        choice = input("Enter your choice (1-6): ")
         if choice == "1":
             os.system('clear')
             keyword = input("Enter a keyword to filter files (leave blank for all files): ")
@@ -125,6 +146,19 @@ def main():
             else:
                 print("Invalid file number.")
         elif choice == "5":
+            os.system('clear')
+            keyword = input("Enter a keyword to filter files (leave blank for all files): ")
+            list_desktop_files(keyword)
+            file_number = int(input("Enter the file number to restore from backup: "))
+            filtered_files = [f for f in os.listdir(BACKUP_DIR) if f.endswith(".desktop")]
+            filtered_files = [f for f in filtered_files if not keyword or keyword.lower() in f.lower()]
+            filtered_files.sort()
+            if 1 <= file_number <= len(filtered_files):
+                file_name = filtered_files[file_number - 1]
+                restore_backup(file_name)
+            else:
+                print("Invalid file number.")
+        elif choice == "6":
             break
         else:
             print("Invalid choice. Please try again.")
