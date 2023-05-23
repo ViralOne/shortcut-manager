@@ -15,7 +15,7 @@ The Desktop Shortcut Manager is a command-line tool written in Python for managi
 3. Run the following command to start using the Desktop Shortcut Manager:
 
    ```bash
-   python shortcut-manager.py
+   sudo python shortcut-manager.py
    ```
 
 4. The script will display a menu with the following options:
