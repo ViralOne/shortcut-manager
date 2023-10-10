@@ -1,6 +1,6 @@
 ## Desktop Shortcut Manager
 
-Welcome to the Desktop Shortcut Manager! This powerful command-line tool empowers you to control `.desktop` files in `/usr/share/applications/`. Easily list, edit, create, remove, and restore backups to customize your shortcuts.
+This tool empowers you to control `.desktop` files in `/usr/share/applications/`. Easily list, edit, create, remove, and restore backups to customize your shortcuts.
 
 ### Prerequisites
 
